@@ -9,18 +9,6 @@ class Plugin extends Base
 {
     public function initialize()
     {
-        $this->on('app.bootstrap', function($container) {
-            Translator::load($container['config']->getCurrentLanguage(), __DIR__.'/Locale');
-
-            $container['eventManager']->register(WebhookHandler::EVENT_COMMIT, t('Github commit received'));
-            $container['eventManager']->register(WebhookHandler::EVENT_ISSUE_OPENED, t('Github issue opened'));
-            $container['eventManager']->register(WebhookHandler::EVENT_ISSUE_CLOSED, t('Github issue closed'));
-            $container['eventManager']->register(WebhookHandler::EVENT_ISSUE_REOPENED, t('Github issue reopened'));
-            $container['eventManager']->register(WebhookHandler::EVENT_ISSUE_ASSIGNEE_CHANGE, t('Github issue assignee change'));
-            $container['eventManager']->register(WebhookHandler::EVENT_ISSUE_LABEL_CHANGE, t('Github issue label change'));
-            $container['eventManager']->register(WebhookHandler::EVENT_ISSUE_COMMENT, t('Github issue comment created'));
-        });
-
         $this->actionManager->getAction('\Kanboard\Action\CommentCreation')->addEvent(WebhookHandler::EVENT_ISSUE_COMMENT);
         $this->actionManager->getAction('\Kanboard\Action\CommentCreation')->addEvent(WebhookHandler::EVENT_COMMIT);
         $this->actionManager->getAction('\Kanboard\Action\TaskAssignCategoryLabel')->addEvent(WebhookHandler::EVENT_ISSUE_LABEL_CHANGE);
@@ -33,6 +21,19 @@ class Plugin extends Base
         $this->template->hook->attach('template:project:integrations', 'GithubWebhook:project/integrations');
 
         $this->route->addRoute('/webhook/github/:project_id/:token', 'webhook', 'handler', 'GithubWebhook');
+    }
+
+    public function onStartup()
+    {
+        Translator::load($this->language->getCurrentLanguage(), __DIR__.'/Locale');
+
+        $this->eventManager->register(WebhookHandler::EVENT_COMMIT, t('Github commit received'));
+        $this->eventManager->register(WebhookHandler::EVENT_ISSUE_OPENED, t('Github issue opened'));
+        $this->eventManager->register(WebhookHandler::EVENT_ISSUE_CLOSED, t('Github issue closed'));
+        $this->eventManager->register(WebhookHandler::EVENT_ISSUE_REOPENED, t('Github issue reopened'));
+        $this->eventManager->register(WebhookHandler::EVENT_ISSUE_ASSIGNEE_CHANGE, t('Github issue assignee change'));
+        $this->eventManager->register(WebhookHandler::EVENT_ISSUE_LABEL_CHANGE, t('Github issue label change'));
+        $this->eventManager->register(WebhookHandler::EVENT_ISSUE_COMMENT, t('Github issue comment created'));
     }
 
     public function getPluginName()
@@ -52,7 +53,7 @@ class Plugin extends Base
 
     public function getPluginVersion()
     {
-        return '1.0.1';
+        return '1.0.2';
     }
 
     public function getPluginHomepage()
