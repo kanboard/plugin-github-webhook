@@ -20,12 +20,12 @@ class Plugin extends Base
 
         $this->template->hook->attach('template:project:integrations', 'GithubWebhook:project/integrations');
 
-        $this->route->addRoute('/webhook/github/:project_id/:token', 'webhook', 'handler', 'GithubWebhook');
+        $this->route->addRoute('/webhook/github/:project_id/:token', 'Webhook', 'handler', 'GithubWebhook');
     }
 
     public function onStartup()
     {
-        Translator::load($this->language->getCurrentLanguage(), __DIR__.'/Locale');
+        Translator::load($this->languageModel->getCurrentLanguage(), __DIR__.'/Locale');
 
         $this->eventManager->register(WebhookHandler::EVENT_COMMIT, t('Github commit received'));
         $this->eventManager->register(WebhookHandler::EVENT_ISSUE_OPENED, t('Github issue opened'));
@@ -53,7 +53,7 @@ class Plugin extends Base
 
     public function getPluginVersion()
     {
-        return '1.0.2';
+        return '1.0.3';
     }
 
     public function getPluginHomepage()

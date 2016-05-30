@@ -2,7 +2,7 @@
 
 namespace Kanboard\Plugin\GithubWebhook\Controller;
 
-use Kanboard\Controller\Base;
+use Kanboard\Controller\BaseController;
 use Kanboard\Plugin\GithubWebhook\WebhookHandler;
 
 /**
@@ -11,7 +11,7 @@ use Kanboard\Plugin\GithubWebhook\WebhookHandler;
  * @package  controller
  * @author   Frederic Guillot
  */
-class Webhook extends Base
+class Webhook extends BaseController
 {
     /**
      * Handle Github webhooks
@@ -30,6 +30,6 @@ class Webhook extends Base
             $this->request->getJson()
         );
 
-        echo $result ? 'PARSED' : 'IGNORED';
+        $this->response->text($result ? 'PARSED' : 'IGNORED');
     }
 }

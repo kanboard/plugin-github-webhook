@@ -76,13 +76,13 @@ class WebhookHandler extends Base
     public function parsePushEvent(array $payload)
     {
         foreach ($payload['commits'] as $commit) {
-            $task_id = $this->task->getTaskIdFromText($commit['message']);
+            $task_id = $this->taskModel->getTaskIdFromText($commit['message']);
 
             if (empty($task_id)) {
                 continue;
             }
 
-            $task = $this->taskFinder->getById($task_id);
+            $task = $this->taskFinderModel->getById($task_id);
 
             if (empty($task)) {
                 continue;
@@ -144,12 +144,12 @@ class WebhookHandler extends Base
      */
     public function parseCommentIssueEvent(array $payload)
     {
-        $task = $this->taskFinder->getByReference($this->project_id, $payload['issue']['number']);
+        $task = $this->taskFinderModel->getByReference($this->project_id, $payload['issue']['number']);
 
         if (! empty($task)) {
-            $user = $this->user->getByUsername($payload['comment']['user']['login']);
+            $user = $this->userModel->getByUsername($payload['comment']['user']['login']);
 
-            if (! empty($user) && ! $this->projectPermission->isAssignable($this->project_id, $user['id'])) {
+            if (! empty($user) && ! $this->projectPermissionModel->isAssignable($this->project_id, $user['id'])) {
                 $user = array();
             }
 
@@ -205,7 +205,7 @@ class WebhookHandler extends Base
      */
     public function handleIssueClosed(array $issue)
     {
-        $task = $this->taskFinder->getByReference($this->project_id, $issue['number']);
+        $task = $this->taskFinderModel->getByReference($this->project_id, $issue['number']);
 
         if (! empty($task)) {
             $event = array(
@@ -234,7 +234,7 @@ class WebhookHandler extends Base
      */
     public function handleIssueReopened(array $issue)
     {
-        $task = $this->taskFinder->getByReference($this->project_id, $issue['number']);
+        $task = $this->taskFinderModel->getByReference($this->project_id, $issue['number']);
 
         if (! empty($task)) {
             $event = array(
@@ -263,10 +263,10 @@ class WebhookHandler extends Base
      */
     public function handleIssueAssigned(array $issue)
     {
-        $user = $this->user->getByUsername($issue['assignee']['login']);
-        $task = $this->taskFinder->getByReference($this->project_id, $issue['number']);
+        $user = $this->userModel->getByUsername($issue['assignee']['login']);
+        $task = $this->taskFinderModel->getByReference($this->project_id, $issue['number']);
 
-        if (! empty($user) && ! empty($task) && $this->projectPermission->isAssignable($this->project_id, $user['id'])) {
+        if (! empty($user) && ! empty($task) && $this->projectPermissionModel->isAssignable($this->project_id, $user['id'])) {
             $event = array(
                 'project_id' => $this->project_id,
                 'task_id' => $task['id'],
@@ -294,7 +294,7 @@ class WebhookHandler extends Base
      */
     public function handleIssueUnassigned(array $issue)
     {
-        $task = $this->taskFinder->getByReference($this->project_id, $issue['number']);
+        $task = $this->taskFinderModel->getByReference($this->project_id, $issue['number']);
 
         if (! empty($task)) {
             $event = array(
@@ -325,7 +325,7 @@ class WebhookHandler extends Base
      */
     public function handleIssueLabeled(array $issue, array $label)
     {
-        $task = $this->taskFinder->getByReference($this->project_id, $issue['number']);
+        $task = $this->taskFinderModel->getByReference($this->project_id, $issue['number']);
 
         if (! empty($task)) {
             $event = array(
@@ -356,7 +356,7 @@ class WebhookHandler extends Base
      */
     public function handleIssueUnlabeled(array $issue, array $label)
     {
-        $task = $this->taskFinder->getByReference($this->project_id, $issue['number']);
+        $task = $this->taskFinderModel->getByReference($this->project_id, $issue['number']);
 
         if (! empty($task)) {
             $event = array(
