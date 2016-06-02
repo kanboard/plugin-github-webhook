@@ -3,6 +3,7 @@
 namespace Kanboard\Plugin\GithubWebhook;
 
 use Kanboard\Core\Plugin\Base;
+use Kanboard\Core\Security\Role;
 use Kanboard\Core\Translator;
 
 class Plugin extends Base
@@ -19,8 +20,8 @@ class Plugin extends Base
         $this->actionManager->getAction('\Kanboard\Action\TaskOpen')->addEvent(WebhookHandler::EVENT_ISSUE_REOPENED);
 
         $this->template->hook->attach('template:project:integrations', 'GithubWebhook:project/integrations');
-
         $this->route->addRoute('/webhook/github/:project_id/:token', 'Webhook', 'handler', 'GithubWebhook');
+        $this->applicationAccessMap->add('Webhook', 'handler', Role::APP_PUBLIC);
     }
 
     public function onStartup()
