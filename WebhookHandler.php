@@ -75,6 +75,10 @@ class WebhookHandler extends Base
      */
     public function parsePushEvent(array $payload)
     {
+        if (empty($payload['commits'])) {
+            return false;
+        }
+
         foreach ($payload['commits'] as $commit) {
             $task_id = $this->taskModel->getTaskIdFromText($commit['message']);
 
@@ -115,6 +119,10 @@ class WebhookHandler extends Base
      */
     public function parseIssueEvent(array $payload)
     {
+        if (empty($payload['action'])) {
+            return false;
+        }
+
         switch ($payload['action']) {
             case 'opened':
                 return $this->handleIssueOpened($payload['issue']);
@@ -144,6 +152,10 @@ class WebhookHandler extends Base
      */
     public function parseCommentIssueEvent(array $payload)
     {
+        if (empty($payload['issue'])) {
+            return false;
+        }
+
         $task = $this->taskFinderModel->getByReference($this->project_id, $payload['issue']['number']);
 
         if (! empty($task)) {
