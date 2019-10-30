@@ -32,4 +32,5 @@ class Webhook extends BaseController
 
         $this->response->text($result ? 'PARSED' : 'IGNORED');
     }
+
 }
