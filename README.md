@@ -1,8 +1,6 @@
 Github Webhook
 ==============
 
-[![Build Status](https://travis-ci.org/kanboard/plugin-github-webhook.svg?branch=master)](https://travis-ci.org/kanboard/plugin-github-webhook)
-
 Bind Github webhook events to Kanboard automatic actions.
 
 Author
